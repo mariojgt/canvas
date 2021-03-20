@@ -1,0 +1,83 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+#rete {
+    background-size: 20px 20px;
+    background-image: linear-gradient(to right, #363636 1px, transparent 1px), linear-gradient(to bottom, #363636 1px, transparent 1px);
+    background-color: #272727;
+    overflow: hidden;
+}
+.node {
+  background: rgba(101, 101, 101, 0.8) !important; opacity:0.9;
+  border: 0px solid #333 !important;
+  box-shadow: 2px 2px 5px #888;
+}
+
+.node:hover {
+  background: rgba(120, 120, 120, 0.8) !important;
+}
+
+.node.selected {
+  background: #272727 !important;
+  border: 2px solid white !important;
+}
+
+.node .title {
+    border-top: 1px solid #ccc;
+	color: #fff;
+	text-align: center;
+	font-weight: 700;
+	font-family: sans-serif;
+	font-size: 18px;
+	border-radius: 10px 10px 0 0;
+	padding: 8px;
+	overflow: hidden;
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(6,6,6,1) 35%, rgba(11,232,114,1) 100%);
+}
+
+
+.node .input-title,
+.node .output-title {
+  margin: 0px 5px !important;
+}
+.socket {
+  width: 20px !important;
+  height: 20px !important;
+  background: #96b38a !important;
+}
+.socket.output {
+  background: #d06363 !important;
+}
+
+.connection .main-path {
+    fill: none;
+    stroke: #eee;
+    stroke-width: 2px;
+    pointer-events: none;
+}
+
+select,
+input {
+    width: 60px;
+    background-color: transparent;
+    padding: 2px 6px;
+    border: 1px solid white;
+    font-size: 14px;
+    color: white;
+    border-radius: 0;
+}
+
+#rete .context-menu .item {
+  background-color: #333333dd !important;
+  border: 0px solid white !important;
+  padding: 5px 10px !important;
+  font-family: sans-serif !important;
+}
+
+#rete .context-menu .item:hover {
+  background-color: #2b5088 !important;
+}
