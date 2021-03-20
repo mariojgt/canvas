@@ -5,14 +5,34 @@
 </template>
 
 <script>
-import { createFlowEditor } from "./flowMode/modelCreator/editor";
-import "./style/editor.css";
+    import { createFlowEditor } from "./flowMode/modelCreator/editor";
+    import "./style/editor.css";
 
-export default {
-    mounted() {
-        createFlowEditor();
-    }
-};
+    export default {
+      name: "rete-model-edito",
+      props: {
+        flowid: {
+          type: String,
+          default: ""
+        },
+        type: {
+          type: String,
+          default: ""
+        }
+      },
+      data: function() {
+        return {
+          data: []
+        };
+      },
+      methods: {},
+      created() {},
+      computed: {},
+      mounted() {
+            // Start the editor and pass some parameters
+            createFlowEditor(this.flowid, this.type);
+      }
+    };
 </script>
 
 <style>

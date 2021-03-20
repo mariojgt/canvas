@@ -9,35 +9,33 @@ import HistoryPlugin from "rete-history-plugin";
 import ConnectionReroutePlugin from 'rete-connection-reroute-plugin';
 //import ConnectionMasteryPlugin  from 'rete-connection-mastery-plugin';
 
-// Import the editor sockets example (bollean, string and mor depend the page need)
-// Usage example sockets.strSocket
-import sockets from '../../core/socket'
-
-// Importing the nodes
+// IMPORTING THE NODES
 // String node
 import * as stringNodes from "../../nodes/stringNodes/string";
 // Numeric nodes
 import * as numericNodes from "../../nodes/numericNodes/numeric";
+// Model creation nodes
+import * as modelNodes from "../../nodes/modelNodes/model";
 
-console.log(numericNodes);
+// Load the save and load manager
+import * as saveLoadCompileManager from "../../core/saveLoadCompileManager";
 
-export async function createFlowEditor() {
-	console.log("createFlowEditor()");
-
+export async function createFlowEditor(flowId, type) {
+    // Editor conteiner ref
 	let container = document.querySelector("#rete");
+    // NODES
 	let components = [
-        new numericNodes.NumComponent(),
-        new numericNodes.AddComponent(),
-        new numericNodes.SubtractComponent(),
-        new numericNodes.MultiplyComponent(),
-        new numericNodes.DivideComponent(),
-        new stringNodes.StringVariable(),
-        new stringNodes.Debug(),
-        new stringNodes.NumberToString(),
+        new modelNodes.ModelVariable(),
+        new modelNodes.ModelMigration(),
+        new modelNodes.ModelFillable(),
+        new modelNodes.ModelHidden(),
 	];
 
+    // Editor id
+    var nodeEditorid = type+flowId;
+
     // Start the editor
-	let editor = new Rete.NodeEditor("demo@0.1.0", container);
+	let editor = new Rete.NodeEditor(nodeEditorid+"@0.1.0", container);
     // Plugns
 	editor.use(ConnectionPlugin);
 	editor.use(VueRenderPlugin);
@@ -52,6 +50,15 @@ export async function createFlowEditor() {
 		items: {
 			"Dump JSON": () => {
 				console.log(editor.toJSON());
+			},
+            "Save": () => {
+                saveLoadCompileManager.save(flowId, editor.toJSON());
+			},
+            "compile": () => {
+                saveLoadCompileManager.save(flowId, editor.toJSON());
+                setTimeout(() => {
+                    saveLoadCompileManager.compile(flowId);
+                }, 1000);
 			}
 		},
 		allocate(component) {
@@ -62,27 +69,25 @@ export async function createFlowEditor() {
 		}
 	});
 
-	let engine = new Rete.Engine("demo@0.1.0");
+	let engine = new Rete.Engine(nodeEditorid+"@0.1.0");
 
 	components.map(c => {
 		editor.register(c);
 		engine.register(c);
 	});
 
-	// let n1 = await components[0].createNode({ num: 2 });
-	// let n2 = await components[0].createNode({ num: 3 });
-	// let add = await components[1].createNode();
 
-	// n1.position = [80, 200];
-	// n2.position = [80, 400];
-	// add.position = [500, 240];
-
-	// editor.addNode(n1);
-	// editor.addNode(n2);
-	// editor.addNode(add);
-
-	// editor.connect(n1.outputs.get("num"), add.inputs.get("num1"));
-	// editor.connect(n2.outputs.get("num"), add.inputs.get("num2"));
+    // Load the Data from the database
+    axios.get('/flow/load/'+flowId, {
+    })
+    .then(function (response) {
+        // Json parse the data
+        var dataLoad = JSON.parse(response.data.data.content);
+        // Editor load nodes
+        editor.fromJSON(dataLoad);
+    })
+    .catch(function (error) {
+    })
 
 	editor.on(
 		"process nodecreated noderemoved connectioncreated connectionremoved",

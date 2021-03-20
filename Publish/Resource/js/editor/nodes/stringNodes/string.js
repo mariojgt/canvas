@@ -5,7 +5,7 @@ import Rete, { Control } from "rete";
 import sockets from '../../core/socket'
 
 // IMPORTIN CONTROLS SUFF LIKE TEXT FIELD SELECT AND MORE
-import * as selectControl from "../../nodesComponents/Select/controler";
+import * as selectControl from "../../nodesComponents/Select/control";
 import * as inputControl from "../../nodesComponents/Input/control";
 
 // The string node can be used to create varaibles
@@ -25,7 +25,7 @@ export class StringVariable extends Rete.Component {
 
 		return node
 			.addControl(new inputControl.InputControler(this.editor, "string")) //Variable name
-			.addControl(new selectControl.StringSelectInputControler(this.editor, "nullable", selectOptions)) // nullable
+			.addControl(new selectControl.SelectControler(this.editor, "nullable", selectOptions)) // nullable
 			.addOutput(out1);
 	}
 

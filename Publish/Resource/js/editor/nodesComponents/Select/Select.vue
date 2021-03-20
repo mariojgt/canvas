@@ -15,7 +15,7 @@
 
 <script>
 export default {
-    props: ['initial', 'readonly', 'emitter', 'ikey', 'options', 'change', 'getData', 'putData'],
+    props: ['initial', 'readonly', 'emitter', 'ikey', 'options', 'type','change', 'getData', 'putData'],
     data() {
         return {
             value: this.initial || 0,
@@ -23,7 +23,23 @@ export default {
     },
     methods: {
         parse(value) {
-            //   return this.type === 'number' ? +value : value;
+            switch (this.type) {
+                // If type boolean
+                case 'boolean':
+                    // check if is true or fasle
+                    if (value === 'true') {
+                        return true;
+                    } else if(value === 'false') {
+                        return false;
+                    } else {
+                        Boolean(value);
+                    }
+                    break;
+                default:
+                    // deatul is string
+                    return value;
+                    break;
+            }
         },
         onChange(e) {
             this.value = this.parse(e.target.value);
@@ -38,7 +54,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.options);
         this.value = this.getData(this.ikey);
     }
 }
