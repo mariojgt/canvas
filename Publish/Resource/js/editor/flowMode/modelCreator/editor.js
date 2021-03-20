@@ -1,3 +1,4 @@
+// Required fore start the editor
 import Rete, { Control } from "rete";
 import VueRenderPlugin from "rete-vue-render-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
@@ -5,127 +6,45 @@ import ContextMenuPlugin from "rete-context-menu-plugin";
 import AreaPlugin from "rete-area-plugin";
 import CommentPlugin from "rete-comment-plugin";
 import HistoryPlugin from "rete-history-plugin";
+import ConnectionReroutePlugin from 'rete-connection-reroute-plugin';
 //import ConnectionMasteryPlugin  from 'rete-connection-mastery-plugin';
 
+// Import the editor sockets example (bollean, string and mor depend the page need)
+// Usage example sockets.strSocket
+import sockets from '../../core/socket'
 
-let numSocket = new Rete.Socket("Number Value");
-const strSocket = new Rete.Socket('String');
+// Importing the nodes
+// String node
+import * as stringNodes from "../../nodes/stringNodes/string";
+// Numeric nodes
+import * as numericNodes from "../../nodes/numericNodes/numeric";
 
-import VueNumberControl from "./NumberControl.vue";
-
-class NumControl extends Control {
-	constructor(emitter, key, readonly = false) {
-		super(key);
-		this.component = VueNumberControl;
-		this.props = {
-			emitter,
-			ikey: key,
-			type: "number",
-			readonly,
-			change: () => this.onChange()
-		};
-	}
-
-	setValue(value) {
-		const ctx = this.vueContext || this.props;
-		ctx.value = value;
-	}
-
-	onChange() {}
-}
-
-class NumComponent extends Rete.Component {
-	constructor() {
-		super("Number");
-	}
-
-	builder(node) {
-		var out1 = new Rete.Output("num", "Value", numSocket);
-
-		return node
-			.addControl(new NumControl(this.editor, "num"))
-			.addOutput(out1);
-	}
-
-	worker(node, inputs, outputs) {
-		outputs["num"] = node.data.num;
-	}
-}
-
-import StringControl from "./String.vue";
-class StringControler extends Control {
-	constructor(emitter, key, readonly = false) {
-		super(key);
-		this.component = StringControl;
-		this.props = {
-			emitter,
-			ikey: key,
-			type: "text",
-			readonly,
-			change: () => this.onChange()
-		};
-	}
-
-	setValue(value) {
-		const ctx = this.vueContext || this.props;
-		ctx.value = value;
-	}
-
-	onChange() {}
-}
-
-class StringVariable extends Rete.Component {
-	constructor() {
-		super("String");
-	}
-
-	builder(node) {
-		var out1 = new Rete.Output("string", "Value", strSocket);
-
-		return node
-			.addControl(new StringControler(this.editor, "string"))
-			.addOutput(out1);
-	}
-
-	worker(node, inputs, outputs) {
-		outputs["string"] = node.data.string;
-	}
-}
-
-class Print extends Rete.Component {
-	constructor() {
-		super("Print");
-	}
-
-	builder(node) {
-		var inp1 = new Rete.Input("string", "Value", strSocket);
-
-		return node
-			.addInput(inp1);
-	}
-
-	worker(node, inputs, outputs) {
-        alert(inputs.string);
-		outputs["string"] = node.data.string;
-	}
-}
+console.log(numericNodes);
 
 export async function createFlowEditor() {
 	console.log("createFlowEditor()");
 
 	let container = document.querySelector("#rete");
 	let components = [
-		new NumComponent(),
-        new StringVariable(),
-        new Print()
+        new numericNodes.NumComponent(),
+        new numericNodes.AddComponent(),
+        new numericNodes.SubtractComponent(),
+        new numericNodes.MultiplyComponent(),
+        new numericNodes.DivideComponent(),
+        new stringNodes.StringVariable(),
+        new stringNodes.Debug(),
+        new stringNodes.NumberToString(),
 	];
 
+    // Start the editor
 	let editor = new Rete.NodeEditor("demo@0.1.0", container);
+    // Plugns
 	editor.use(ConnectionPlugin);
 	editor.use(VueRenderPlugin);
 	editor.use(AreaPlugin);
 	editor.use(CommentPlugin);
 	editor.use(HistoryPlugin);
+    editor.use(ConnectionReroutePlugin);
 	//editor.use(ConnectionMasteryPlugin);
 
 	editor.use(ContextMenuPlugin, {

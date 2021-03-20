@@ -26,6 +26,7 @@ mix.js('resources/vendor/Canvas/js/app.js', 'public/vendor/Canvas/js')
 
 const tailwindcss = require('tailwindcss')
 
+
 mix.sass('resources/vendor/Canvas/sass/app.scss', 'public/vendor/Canvas/css')
    .options({
       processCssUrls: false,

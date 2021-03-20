@@ -60,7 +60,7 @@ body {
     pointer-events: none;
 }
 
-select,
+/* select,
 input {
     width: 60px;
     background-color: transparent;
@@ -69,7 +69,7 @@ input {
     font-size: 14px;
     color: white;
     border-radius: 0;
-}
+} */
 
 #rete .context-menu .item {
   background-color: #333333dd !important;
